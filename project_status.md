@@ -3,8 +3,12 @@
 ## 目前進度
 **日期：** 2025-08-22  
 **學習階段：** 準備階段  
+**GitHub 儲存庫：** https://github.com/yyuchen-workspace/LEARNIG_PROJECT.git  
 **完成項目：**
 - ✅ 建立 .gitignore 檔案
+- ✅ 建立專案狀態追蹤檔案
+- ✅ 上傳至 GitHub 儲存庫
+- ✅ 基本 Flask 應用結構設定
 
 ## 下一步計畫
 根據 CLAUDE.md 中的 4 週學習計畫，接下來需要：
@@ -40,8 +44,28 @@ learning_project/
 - SQLAlchemy ORM（第2週）
 - 用戶認證系統（第3週）
 
+## 跨電腦工作流程
+**clone 專案：**
+```bash
+git clone https://github.com/yyuchen-workspace/LEARNIG_PROJECT.git
+cd LEARNIG_PROJECT
+```
+
+**開始工作前：**
+```bash
+git pull origin main  # 拉取最新版本
+```
+
+**工作完成後：**
+```bash
+git add .
+git commit -m "描述你的變更"
+git push origin main
+```
+
 ## 注意事項
 - 遵循 CLAUDE.md 中的 4 週計畫進行
 - 每週都要達成設定的里程碑
 - 優先編輯現有檔案而非建立新檔案
 - 不要提前建立文件檔案除非必要
+- 每次工作前記得先 git pull，完成後要 git push
