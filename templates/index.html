@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待辦事項管理器</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .add-form { 
+            margin-bottom: 30px; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-radius: 5px;
+        }
+        .task-item { 
+            padding: 15px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 5px;
+            background: white;
+        }
+        .completed { 
+            background: #d4edda; 
+            text-decoration: line-through; 
+            opacity: 0.7;
+        }
+        button { 
+            padding: 8px 15px; 
+            margin: 5px; 
+            border: none; 
+            border-radius: 3px; 
+            cursor: pointer;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        input[type="text"] { 
+            padding: 10px; 
+            width: 70%; 
+            border: 1px solid #ddd; 
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 我的待辦事項</h1>
+        
+        <!-- 新增任務表單 -->
+        <div class="add-form">
+            <h3>新增任務</h3>
+            <form action="{{ url_for('add_task') }}" method="POST">
+                <input type="text" name="title" placeholder="輸入任務內容..." required>
+                <button type="submit" class="btn-primary">新增</button>
+            </form>
+        </div>
+
+        <!-- 任務列表 -->
+        <div class="task-list">
+            <h3>任務列表 ({{ tasks|length }} 項)</h3>
+            {% if tasks %}
+                {% for task in tasks %}
+                <div class="task-item {% if task.completed %}completed{% endif %}">
+                    <strong>{{ task.title }}</strong>
+                    <div style="float: right;">
+                        {% if not task.completed %}
+                        <a href="{{ url_for('complete_task', task_id=loop.index0) }}">
+                            <button class="btn-success">完成</button>
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('delete_task', task_id=loop.index0) }}">
+                            <button class="btn-danger">刪除</button>
+                        </a>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>還沒有任務，開始新增第一個任務吧！</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
