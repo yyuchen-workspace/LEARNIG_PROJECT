@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編輯任務 - 待辦事項管理器</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .edit-form { 
+            margin-bottom: 30px; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-radius: 5px;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            border: none; 
+            border-radius: 3px; 
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        input[type="text"] { 
+            padding: 12px; 
+            width: 100%; 
+            border: 1px solid #ddd; 
+            border-radius: 3px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 編輯任務</h1>
+        
+        <div class="edit-form">
+            <form action="{{ url_for('edit_task', task_id=task_id) }}" method="POST">
+                <label for="title">任務標題:</label>
+                <input type="text" id="title" name="title" value="{{ task.title }}" required>
+                
+                <label for="description">任務描述:</label>
+                <textarea id="description" name="description" rows="4">{{ task.description or '' }}</textarea>
+                
+                <div style="margin: 15px 0;">
+                    <label for="priority">優先級：</label>
+                    <select name="priority" id="priority" style="padding: 5px; margin: 0 10px; border: 1px solid #ddd; border-radius: 3px;">
+                        <option value="low" {% if task.priority == 'low' %}selected{% endif %}>🟢 低優先級</option>
+                        <option value="medium" {% if task.priority == 'medium' or not task.priority %}selected{% endif %}>🟡 中優先級</option>
+                        <option value="high" {% if task.priority == 'high' %}selected{% endif %}>🔴 高優先級</option>
+                    </select>
+                    
+                    <label for="category">分類：</label>
+                    <select name="category" id="category" style="padding: 5px; margin: 0 10px; border: 1px solid #ddd; border-radius: 3px;">
+                        <option value="" {% if not task.category %}selected{% endif %}>選擇分類（選填）</option>
+                        <option value="work" {% if task.category == 'work' %}selected{% endif %}>💼 工作</option>
+                        <option value="personal" {% if task.category == 'personal' %}selected{% endif %}>👤 個人</option>
+                        <option value="study" {% if task.category == 'study' %}selected{% endif %}>📚 學習</option>
+                        <option value="family" {% if task.category == 'family' %}selected{% endif %}>🏠 家庭</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-primary">更新任務</button>
+                <a href="{{ url_for('index') }}" class="btn-secondary">取消</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

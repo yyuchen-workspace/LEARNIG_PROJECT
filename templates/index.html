@@ -36,6 +36,25 @@
             text-decoration: line-through; 
             opacity: 0.7;
         }
+        .priority-high { border-left: 5px solid #dc3545; }
+        .priority-medium { border-left: 5px solid #ffc107; }
+        .priority-low { border-left: 5px solid #28a745; }
+        .task-meta { 
+            font-size: 0.8em; 
+            color: #666; 
+            margin: 5px 0;
+        }
+        .priority-tag, .category-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-right: 5px;
+        }
+        .priority-high-tag { background: #ffe6e6; color: #dc3545; }
+        .priority-medium-tag { background: #fff3cd; color: #856404; }
+        .priority-low-tag { background: #d4edda; color: #155724; }
+        .category-tag { background: #e3f2fd; color: #1565c0; }
         button { 
             padding: 8px 15px; 
             margin: 5px; 
@@ -62,8 +81,27 @@
         <div class="add-form">
             <h3>新增任務</h3>
             <form action="{{ url_for('add_task') }}" method="POST">
-                <input type="text" name="title" placeholder="輸入任務內容..." required>
-                <button type="submit" class="btn-primary">新增</button>
+                <input type="text" name="title" placeholder="任務標題..." required>
+                <textarea name="description" placeholder="任務詳細描述（選填）..." rows="3" style="width: 70%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 3px; resize: vertical;"></textarea>
+                <br>
+                <div style="margin: 10px 0;">
+                    <label for="priority">優先級：</label>
+                    <select name="priority" id="priority" style="padding: 5px; margin: 0 10px; border: 1px solid #ddd; border-radius: 3px;">
+                        <option value="low">🟢 低優先級</option>
+                        <option value="medium" selected>🟡 中優先級</option>
+                        <option value="high">🔴 高優先級</option>
+                    </select>
+                    
+                    <label for="category">分類：</label>
+                    <select name="category" id="category" style="padding: 5px; margin: 0 10px; border: 1px solid #ddd; border-radius: 3px;">
+                        <option value="">選擇分類（選填）</option>
+                        <option value="work">💼 工作</option>
+                        <option value="personal">👤 個人</option>
+                        <option value="study">📚 學習</option>
+                        <option value="family">🏠 家庭</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">新增任務</button>
             </form>
         </div>
 
@@ -72,15 +110,45 @@
             <h3>任務列表 ({{ tasks|length }} 項)</h3>
             {% if tasks %}
                 {% for task in tasks %}
-                <div class="task-item {% if task.completed %}completed{% endif %}">
-                    <strong>{{ task.title }}</strong>
+                <div class="task-item {% if task.completed %}completed{% endif %} priority-{{ task.priority or 'medium' }}">
+                    <div style="margin-bottom: 8px;">
+                        <strong>{{ task.title }}</strong>
+                        {% if task.description %}
+                        <p style="margin: 5px 0; color: #666; font-size: 0.9em;">{{ task.description }}</p>
+                        {% endif %}
+                        
+                        <div class="task-meta">
+                            {% if task.priority == 'high' %}
+                            <span class="priority-tag priority-high-tag">🔴 高優先級</span>
+                            {% elif task.priority == 'low' %}
+                            <span class="priority-tag priority-low-tag">🟢 低優先級</span>
+                            {% else %}
+                            <span class="priority-tag priority-medium-tag">🟡 中優先級</span>
+                            {% endif %}
+                            
+                            {% if task.category %}
+                                {% if task.category == 'work' %}
+                                <span class="category-tag">💼 工作</span>
+                                {% elif task.category == 'personal' %}
+                                <span class="category-tag">👤 個人</span>
+                                {% elif task.category == 'study' %}
+                                <span class="category-tag">📚 學習</span>
+                                {% elif task.category == 'family' %}
+                                <span class="category-tag">🏠 家庭</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
                     <div style="float: right;">
                         {% if not task.completed %}
-                        <a href="{{ url_for('complete_task', task_id=loop.index0) }}">
+                        <a href="{{ url_for('complete_task', task_id=task.id) }}">
                             <button class="btn-success">完成</button>
                         </a>
                         {% endif %}
-                        <a href="{{ url_for('delete_task', task_id=loop.index0) }}">
+                        <a href="{{ url_for('edit_task', task_id=task.id) }}">
+                            <button class="btn-primary">編輯</button>
+                        </a>
+                        <a href="{{ url_for('delete_task', task_id=task.id) }}">
                             <button class="btn-danger">刪除</button>
                         </a>
                     </div>
